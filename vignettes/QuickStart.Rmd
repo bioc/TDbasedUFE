@@ -46,50 +46,28 @@ Here I introduce how we can use TDbasedUFE to process real data.
 
 ## Gene expression.
 
-Here is how we can process real data. First we prepare the data set from
-tximportdata package
+We use the first 10,000 genes from the original six-sample
+tximportData example, bundled with this package.
+A/B labels are illustrative labels from the original vignette.
 
 ```{r}
 require(GenomicRanges)
 require(rTensor)
-library("readr")
-library("tximport")
-library("tximportData")
-dir <- system.file("extdata", package="tximportData")
-samples <- read.table(file.path(dir,"samples.txt"), header=TRUE)
-samples$condition <- factor(rep(c("A","B"),each=3))
-rownames(samples) <- samples$run
-samples[,c("pop","center","run","condition")]
-files <- file.path(dir,"salmon", samples$run, "quant.sf.gz")
-names(files) <- samples$run
-tx2gene <- read_csv(file.path(dir, "tx2gene.gencode.v27.csv"))
-txi <- tximport(files, type="salmon", tx2gene=tx2gene)
+f <- system.file("extdata", "quickstart_counts.rds",
+    package = "TDbasedUFE", mustWork = TRUE)
+example <- readRDS(f)
+counts <- example$counts
+samples <- example$samples
+dim(counts)
 ```
 
-As can be seen on the above, this data set is composed of six samples, which 
-are divided into two classes, each of which includes three out of six samples.
-The number of features is 58288
-
-```{r}
-dim(txi$counts)
-```
-
-which is too many to execute small desktops, we reduce number of features to
-10,000
-
-```{r}
-txi[seq_len(3)] <-
-    lapply(txi[seq_len(3)],
-    function(x){dim(x);x[seq_len(10000),]})
-```
-
-Then we reformat count data, txi\$counts, as a tensor, $Z$, whose dimension is
+Then we reformat count data, counts, as a tensor, $Z$, whose dimension is
 $10000 \times 3 \times 2$ and HOSVD was applied to $Z$ to get tensor 
 decomposition using function computeHosvd.
 
 ```{r}
 Z <- PrepareSummarizedExperimentTensor(matrix(samples$sample,c(3,2)),
-    rownames(txi$abundance),array(txi$counts,c(dim(txi$counts)[1],3,2)))
+    rownames(counts),array(counts,c(dim(counts)[1],3,2)))
 dim(attr(Z,"value"))
 HOSVD <- computeHosvd(Z)
 ```

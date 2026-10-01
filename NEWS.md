@@ -1,3 +1,9 @@
+# TDbasedUFE 1.13.1
+
+- Bundle the original 10,000-gene, six-sample count matrix.
+- Use bundled data in QuickStart and tests.
+- Remove unused readr, tximport and tximportData imports.
+
 # TDbasedUFE 0.99.7
 
 - Bugfix

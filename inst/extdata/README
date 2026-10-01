@@ -1,0 +1,21 @@
+quickstart_counts.rds
+
+Source: six-sample Salmon example from tximportData 1.40.0.
+https://bioconductor.org/packages/tximportData/
+Source package license: GPL (>= 2).
+TDbasedUFE license: GPL-3.
+
+Gene-level counts were generated using tximport and
+tx2gene.gencode.v27.csv. The first 10,000 of 58,288 genes
+were retained, without rounding, in the original sample order.
+
+The object contains counts, samples and source metadata.
+The tximport version is recorded in source metadata.
+A/B labels are illustrative labels inherited from the original
+vignette, not biological group annotations.
+
+To regenerate, run from the package root:
+Rscript inst/scripts/make_quickstart_data.R
+
+Regeneration requires tximport and the original six-sample
+tximportData. Running the bundled example does not require them.

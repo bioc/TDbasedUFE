@@ -3,10 +3,7 @@
 
 ## usethis namespace: start
 #' @import methods
-#' @import readr
 #' @import MOFAdata
-#' @import tximport
-#' @import tximportData
 #' @importFrom shiny fluidPage sidebarLayout  sidebarPanel actionButton 
 #' mainPanel plotOutput observeEvent runApp shinyApp stopApp renderPlot
 #' @importFrom methods new

@@ -1,31 +1,23 @@
 test_that("multiplication works", {
 require(GenomicRanges)
 require(rTensor)
-library("readr")
-library("tximport")
-library("tximportData")
-dir <- system.file("extdata", package="tximportData")
-samples <- read.table(file.path(dir,"samples.txt"), header=TRUE)
-samples$condition <- factor(rep(c("A","B"),each=3))
-rownames(samples) <- samples$run
-samples[,c("pop","center","run","condition")]
-files <- file.path(dir,"salmon", samples$run, "quant.sf.gz")
-names(files) <- samples$run
-tx2gene <- read_csv(file.path(dir, "tx2gene.gencode.v27.csv"))
-txi <- tximport(files, type="salmon", tx2gene=tx2gene)
-txi[seq_len(3)] <-
-    lapply(txi[seq_len(3)],function(x){dim(x);x[seq_len(10000),]})
-
+f <- system.file("extdata", "quickstart_counts.rds",
+    package = "TDbasedUFE", mustWork = TRUE)
+example <- readRDS(f)
+counts <- example$counts
+samples <- example$samples
+stopifnot(identical(dim(counts), c(10000L, 6L)))
+stopifnot(identical(colnames(counts), samples$run))
 
 Z <- PrepareSummarizedExperimentTensor(matrix(samples$sample,c(3,2)),
-    rownames(txi$abundance),array(txi$counts,c(dim(txi$counts)[1],3,2)))
+    rownames(counts),array(counts,c(dim(counts)[1],3,2)))
 HOSVD <- computeHosvd(Z)
 input_all <- selectSingularValueVectorSmall(HOSVD,input_all=c(1,2))
 index <- selectFeature(HOSVD,input_all)
 
 
 Z <- PrepareSummarizedExperimentTensor(matrix(samples$sample,c(6,1)),
-rownames(txi$abundance),array(txi$counts,c(dim(txi$counts)[1],6)))
+rownames(counts),array(counts,c(dim(counts)[1],6)))
 HOSVD <- computeHosvd(Z)
 cond <- list(0,rep(c("A","B"),each=3))
 input_all <- selectSingularValueVectorLarge(HOSVD,cond,input_all=2)

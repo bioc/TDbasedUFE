@@ -1,7 +1,7 @@
 Package: TDbasedUFE
 Type: Package
 Title: Tensor Decomposition Based Unsupervised Feature Extraction
-Version: 1.13.0
+Version: 1.13.1
 Authors@R: 
     person("Y-h.", "Taguchi", ,
     "tag@granular.com", role = c("aut", "cre"),
@@ -28,11 +28,8 @@ BugReports: https://github.com/tagtag/TDbasedUFE/issues
 Imports: 
     GenomicRanges,
     rTensor,
-    readr,
     methods,
     MOFAdata,
-    tximport,
-    tximportData,
     graphics,
     stats,
     utils,
